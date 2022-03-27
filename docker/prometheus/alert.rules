@@ -1,0 +1,44 @@
+groups: 
+- name: example
+  rules:
+  - alert: PrometheusTargetMissing
+    expr: up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing (instance {{ $labels.instance }})"
+      description: "A Prometheus target has disappeared. An exporter might be crashed. VALUE = {{ $value }}  LABELS: {{ $labels }}"
+  - alert: high_load
+    expr: node_load1 > 0.8
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Instance {{ $labels.instance }} under high load"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} is under high load."
+  - alert: Long_delay
+    expr: probe_http_duration_seconds > 5.0
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Instance {{ $labels.instance }} is not answer more then 5 seconds" 
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has some problems."
+  - alert: status_code
+    expr: probe_http_status_code != 200
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Instance {{ $labels.instance }} has bad status"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has not 200 OK status."
+  - alert: uptime
+    expr: node_time_seconds-node_boot_time_seconds < 5
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "Instance {{ $labels.instance }} was reboot"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} was reboot."
+
